@@ -1,5 +1,8 @@
 <?php
 
+require_once 'Domain51/CodeGen/Decorator/Method/Signature.php';
+require_once 'Domain51/CodeGen/Decorator/Method/Arguments.php';
+
 class Domain51_CodeGen_Decorator_Method
 {
     private $_method = null;
@@ -11,17 +14,16 @@ class Domain51_CodeGen_Decorator_Method
     
     public function __toString()
     {
-        switch ($this->_method->getName()) {
-            case 'message' :
-                return "public function message() { return'Hello World!'; }";
-            
-            case 'random' :
-                return "public function random() { return 'Random Number: ' . rand(100, 199); }";
-            
-            case 'methodWithArgument':
-                return 'public function methodWithArgument() { }';
+        if (substr($this->_method->getName(), 0, 2) == '__') {
+            return '';
         }
         
-        return '';
+        $signature = new Domain51_CodeGen_Decorator_Method_Signature($this->_method);
+        $arguments = (string)new Domain51_CodeGen_Decorator_Method_Arguments($this->_method);
+        $code = (string)$signature . "\n" .
+            "{\n" .
+            "    return \$this->_decorated->{$this->_method->getName()}({$arguments});\n" .
+            "}";
+        return $code;
     }
 }

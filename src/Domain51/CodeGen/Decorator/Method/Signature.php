@@ -1,5 +1,7 @@
 <?php
 
+require_once 'Domain51/CodeGen/Decorator/Method/Arguments.php';
+
 class Domain51_CodeGen_Decorator_Method_Signature
 {
     private $_method = null;
@@ -21,21 +23,7 @@ class Domain51_CodeGen_Decorator_Method_Signature
         
         $reference = $this->_method->returnsReference() ? '&' : '';
         
-        return "{$scope} function {$reference}{$this->_method->getName()}({$this->_parameters()})";
-    }
-    
-    private function _parameters()
-    {
-        $prepared_parameters = array();
-        foreach ($this->_method->getParameters() as $parameter) {
-            $string = '';
-            if ($parameter->isPassedByReference()) {
-                $string .= '&';
-            }
-            $string .= "\${$parameter->getName()}";
-            $prepared_parameters[] = $string;
-        }
-        
-        return implode(", ", $prepared_parameters);
+        $arguments = (string) new Domain51_CodeGen_Decorator_Method_Arguments($this->_method);
+        return "{$scope} function {$reference}{$this->_method->getName()}({$arguments})";
     }
 }
