@@ -70,8 +70,6 @@ class Domain51_CodeGen_Decorator
                 $methods[] = (string)new Domain51_CodeGen_Decorator_Method($method);
             }
             return implode("\n", $methods);
-                    
-            return "";
         }
     }
 }
