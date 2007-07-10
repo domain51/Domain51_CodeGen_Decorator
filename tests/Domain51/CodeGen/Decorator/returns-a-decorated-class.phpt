@@ -20,6 +20,9 @@ $object = new ASimpleObjectDecorator(new ASimpleObject);
 echo $object->message() . "\n";
 echo $object->random() . "\n";
 
+$reflection = new ReflectionObject($object);
+assert('$reflection->hasMethod("methodWithArgument")');
+
 ?>
 ===DONE===
 --EXPECTF--

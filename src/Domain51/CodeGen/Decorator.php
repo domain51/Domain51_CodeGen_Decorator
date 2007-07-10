@@ -1,5 +1,7 @@
 <?php
 
+require_once 'Domain51/CodeGen/Decorator/Method.php';
+
 class Domain51_CodeGen_Decorator
 {
     private $_reflection = null;
@@ -28,7 +30,7 @@ class Domain51_CodeGen_Decorator
     public function __toString()
     {
         
-        return "
+        $code = "
         class {$this->_decorator_name} {
             private \$_decorated = null;
             
@@ -49,6 +51,7 @@ class Domain51_CodeGen_Decorator
             
             {$this->_generateMethods()}
             }";
+        return $code;
     }
     
     private function _generateMethods()
@@ -62,9 +65,13 @@ class Domain51_CodeGen_Decorator
                     );
                 }';
         } else {
-            return "
-            public function message() { return'Hello World!'; }
-            public function random() { return 'Random Number: ' . rand(100, 199); }";
+            $methods = array();
+            foreach ($this->_reflection->getMethods() as $method) {
+                $methods[] = (string)new Domain51_CodeGen_Decorator_Method($method);
+            }
+            return implode("\n", $methods);
+                    
+            return "";
         }
     }
 }

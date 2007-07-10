@@ -11,6 +11,8 @@ class ASimpleObject
     {
         return "Random Number: " . rand(100, 199);
     }
+    
+    public function methodWithArgument($param) { }
 }
 
 
