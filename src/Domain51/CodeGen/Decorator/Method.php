@@ -18,9 +18,9 @@ class Domain51_CodeGen_Decorator_Method
             return '';
         }
         
-        $signature = new Domain51_CodeGen_Decorator_Method_Signature($this->_method);
+        $signature = (string)new Domain51_CodeGen_Decorator_Method_Signature($this->_method);
         $arguments = (string)new Domain51_CodeGen_Decorator_Method_Arguments($this->_method);
-        $code = (string)$signature . "\n" .
+        $code = "{$signature}\n" .
             "{\n" .
             "    return \$this->_decorated->{$this->_method->getName()}({$arguments});\n" .
             "}";
