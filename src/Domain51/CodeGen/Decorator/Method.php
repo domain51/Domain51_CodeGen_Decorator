@@ -7,7 +7,7 @@ class Domain51_CodeGen_Decorator_Method
 {
     private $_method = null;
     
-    public function __construct($method)
+    public function __construct(ReflectionMethod $method)
     {
         $this->_method = $method;
     }
