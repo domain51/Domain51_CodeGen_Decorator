@@ -4,10 +4,18 @@ class Domain51_CodeGen_Decorator_Method_Arguments
 {
     private $_method = null;
     private $_short_arrays = false;
+    private $_type_hint = true;
     
     public function __construct(ReflectionMethod $method)
     {
         $this->_method = $method;
+    }
+    
+    public function __set($key, $value)
+    {
+        if ($key == 'type_hint') {
+            $this->_type_hint = (bool)$value;
+        }
     }
     
     public function __toString()
@@ -19,10 +27,12 @@ class Domain51_CodeGen_Decorator_Method_Arguments
         $arguments = array();
         foreach ($this->_method->getParameters() as $parameter) {
             $code = '';
-            if ($parameter->isArray()) {
-                $code .= 'array ';
-            } elseif (!is_null($parameter->getClass())) {
-                $code .= $parameter->getClass()->getName() . ' ';
+            if ($this->_type_hint) {
+                if ($parameter->isArray()) {
+                    $code .= 'array ';
+                } elseif (!is_null($parameter->getClass())) {
+                    $code .= $parameter->getClass()->getName() . ' ';
+                }
             }
             if ($parameter->isPassedByReference()) {
                 $code .= '&';
