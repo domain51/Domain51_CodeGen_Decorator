@@ -30,27 +30,27 @@ class Domain51_CodeGen_Decorator
     public function __toString()
     {
         
-        $code = "
-        class {$this->_decorator_name} {
-            private \$_decorated = null;
-            
-            public function __construct({$this->_reflection->getName()} \$decorated)
-            {
-                \$this->_decorated = \$decorated;
-            }
-            
-            public function __get(\$key)
-            {
-                return \$this->_decorated->\$key;
-            }
-            
-            public function __set(\$key, \$value)
-            {
-                \$this->_decorated->\$key = \$value;
-            }
-            
-            {$this->_generateMethods()}
-            }";
+        $code = "class {$this->_decorator_name}\n" .
+            "{\n" .
+            "    private \$_decorated = null;\n" .
+            "\n" .
+            "    public function __construct({$this->_reflection->getName()} \$decorated)\n" .
+            "    {\n" .
+            "        \$this->_decorated = \$decorated;\n" .
+            "    }\n" .
+            "\n" .
+            "    public function __get(\$key)\n" .
+            "    {\n" .
+            "        return \$this->_decorated->\$key;\n" .
+            "    }\n" .
+            "\n" .
+            "    public function __set(\$key, \$value)\n" .
+            "    {\n" .
+            "        \$this->_decorated->\$key = \$value;\n" .
+            "    }\n" .
+            "\n" .
+            "{$this->_generateMethods()}\n" .
+            "}";
         return $code;
     }
     
@@ -67,9 +67,11 @@ class Domain51_CodeGen_Decorator
         } else {
             $methods = array();
             foreach ($this->_reflection->getMethods() as $method) {
-                $methods[] = (string)new Domain51_CodeGen_Decorator_Method($method);
+                $decorated_method = new Domain51_CodeGen_Decorator_Method($method);
+                $decorated_method->indention = '    ';
+                $methods[] = (string)$decorated_method;
             }
-            return implode("\n", $methods);
+            return implode("\n\n", $methods);
         }
     }
 }

@@ -6,10 +6,18 @@ require_once 'Domain51/CodeGen/Decorator/Method/Arguments.php';
 class Domain51_CodeGen_Decorator_Method
 {
     private $_method = null;
+    private $_indention = null;
     
     public function __construct(ReflectionMethod $method)
     {
         $this->_method = $method;
+    }
+    
+    public function __set($key, $value)
+    {
+        if ($key == 'indention') {
+            $this->_indention = $value;
+        }
     }
     
     public function __toString()
@@ -20,10 +28,10 @@ class Domain51_CodeGen_Decorator_Method
         
         $signature = (string)new Domain51_CodeGen_Decorator_Method_Signature($this->_method);
         $arguments = (string)new Domain51_CodeGen_Decorator_Method_Arguments($this->_method);
-        $code = "{$signature}\n" .
-            "{\n" .
-            "    return \$this->_decorated->{$this->_method->getName()}({$arguments});\n" .
-            "}";
+        $code = "{$this->_indention}{$signature}\n" .
+            "{$this->_indention}{\n" .
+            "{$this->_indention}    return \$this->_decorated->{$this->_method->getName()}({$arguments});\n" .
+            "{$this->_indention}}";
         return $code;
     }
 }
