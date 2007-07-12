@@ -6,6 +6,7 @@ class Domain51_CodeGen_Decorator
 {
     private $_reflection = null;
     private $_decorator_name = null;
+    private $_magic_methods = array('__get', '__set', '__construct', '__destruct');
     private $_use_call = false;
     
     public function __construct($param)
@@ -38,7 +39,7 @@ class Domain51_CodeGen_Decorator
             "    {\n" .
             "        \$this->_decorated = \$decorated;\n" .
             "    }\n" .
-            "\n" .
+            "{$this->_generateDestruct()}" .
             "    public function __get(\$key)\n" .
             "    {\n" .
             "        return \$this->_decorated->\$key;\n" .
@@ -48,8 +49,7 @@ class Domain51_CodeGen_Decorator
             "    {\n" .
             "        \$this->_decorated->\$key = \$value;\n" .
             "    }\n" .
-            "\n" .
-            "{$this->_generateMethods()}\n" .
+            "{$this->_generateMethods()}" .
             "}";
         return $code;
     }
@@ -67,11 +67,31 @@ class Domain51_CodeGen_Decorator
         } else {
             $methods = array();
             foreach ($this->_reflection->getMethods() as $method) {
+                if (in_array($method->getName(), $this->_magic_methods)) {
+                    continue;
+                }
                 $decorated_method = new Domain51_CodeGen_Decorator_Method($method);
                 $decorated_method->indention = '    ';
                 $methods[] = (string)$decorated_method;
             }
-            return implode("\n\n", $methods);
+            if (count($methods) == 0) {
+                return '';
+            }
+            return "\n" . implode("\n\n", $methods) . "\n";
         }
+    }
+    
+    private function _generateDestruct()
+    {
+        if (!$this->_reflection->hasMethod('__destruct')) {
+            return "\n";
+        }
+        
+        $code = "\n" . 
+                "    public function __destruct()\n" .
+                "    {\n" .
+                "        unset(\$this->_decorated);\n" .
+                "    }\n\n";
+        return $code;
     }
 }
