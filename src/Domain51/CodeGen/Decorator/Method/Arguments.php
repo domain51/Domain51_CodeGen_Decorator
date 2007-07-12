@@ -4,7 +4,7 @@ class Domain51_CodeGen_Decorator_Method_Arguments
 {
     private $_method = null;
     private $_short_arrays = false;
-    private $_type_hint = true;
+    private $_short_mode = false;
     
     public function __construct(ReflectionMethod $method)
     {
@@ -13,8 +13,8 @@ class Domain51_CodeGen_Decorator_Method_Arguments
     
     public function __set($key, $value)
     {
-        if ($key == 'type_hint') {
-            $this->_type_hint = (bool)$value;
+        if ($key == 'short_mode') {
+            $this->_short_mode = (bool)$value;
         }
     }
     
@@ -27,7 +27,7 @@ class Domain51_CodeGen_Decorator_Method_Arguments
         $arguments = array();
         foreach ($this->_method->getParameters() as $parameter) {
             $code = '';
-            if ($this->_type_hint) {
+            if (!$this->_short_mode) {
                 if ($parameter->isArray()) {
                     $code .= 'array ';
                 } elseif (!is_null($parameter->getClass())) {
@@ -39,7 +39,7 @@ class Domain51_CodeGen_Decorator_Method_Arguments
             }
             $code .= '$' . $parameter->getName();
             
-            if ($parameter->isDefaultValueAvailable()) {
+            if (!$this->_short_mode && $parameter->isDefaultValueAvailable()) {
                 $code .= ' = ';
                 $default = $parameter->getDefaultValue();
                 if (is_array($default)) {
