@@ -27,7 +27,8 @@ class Domain51_CodeGen_Decorator_Method
         }
         
         $signature = (string)new Domain51_CodeGen_Decorator_Method_Signature($this->_method);
-        $arguments = (string)new Domain51_CodeGen_Decorator_Method_Arguments($this->_method);
+        $arguments = new Domain51_CodeGen_Decorator_Method_Arguments($this->_method);
+        $arguments->short_mode = true;
         $code = "{$this->_indention}{$signature}\n" .
             "{$this->_indention}{\n" .
             "{$this->_indention}    return \$this->_decorated->{$this->_method->getName()}({$arguments});\n" .
