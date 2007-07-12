@@ -19,6 +19,10 @@ class ASimpleClass
 
 echo new Domain51_CodeGen_Decorator('ASimpleClass') . "\n";
 
+$decorator = new Domain51_CodeGen_Decorator('ASimpleClass');
+$decorator->use_call = true;
+echo $decorator . "\n";
+
 ?>
 ===DONE===
 --EXPECT--
@@ -49,6 +53,33 @@ class ASimpleClassDecorator
     public function someMethodWithParameter($param)
     {
         return $this->_decorated->someMethodWithParameter($param);
+    }
+}
+class ASimpleClassDecorator
+{
+    private $_decorated = null;
+
+    public function __construct(ASimpleClass $decorated)
+    {
+        $this->_decorated = $decorated;
+    }
+
+    public function __get($key)
+    {
+        return $this->_decorated->$key;
+    }
+
+    public function __set($key, $value)
+    {
+        $this->_decorated->$key = $value;
+    }
+
+    public function __call($method, $arguments)
+    {
+        return call_user_func_array(
+            array($this->_decorated, $method),
+            $arguments
+        );
     }
 }
 ===DONE===

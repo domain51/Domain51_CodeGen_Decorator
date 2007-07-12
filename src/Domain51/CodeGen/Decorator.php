@@ -57,13 +57,14 @@ class Domain51_CodeGen_Decorator
     private function _generateMethods()
     {
         if ($this->_use_call) {
-            return '
-                public function __call($method, $arguments) {
-                    return call_user_func_array(
-                        array($this->_decorated, $method),
-                        $arguments
-                    );
-                }';
+            return "\n" .
+                   "    public function __call(\$method, \$arguments)\n" .
+                   "    {\n" .
+                   "        return call_user_func_array(\n" .
+                   "            array(\$this->_decorated, \$method),\n" .
+                   "            \$arguments\n" .
+                   "        );\n" .
+                   "    }\n";
         } else {
             $methods = array();
             foreach ($this->_reflection->getMethods() as $method) {
