@@ -10,13 +10,6 @@ class Domain51_CodeGen_Decorator_Method_Arguments
         $this->_method = $method;
     }
     
-    public function __set($key, $value)
-    {
-        if ($key == 'short_arrays') {
-            $this->_short_arrays = (bool)$value;
-        }
-    }
-    
     public function __toString()
     {
         if ($this->_method->getNumberOfParameters() == 0) {
