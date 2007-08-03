@@ -1,4 +1,4 @@
-#!/usr/local/bin/php
+#!@php_bin@
 <?php
 
 // BEGIN PACKAGE STRIP
