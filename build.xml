@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Domain51_CodeGen_Decorator" basedir="." default="make">
+    <taskdef classname="phing.tasks.ext.d51PearPkg2Task" name="d51pearpkg2" />
+    
+    <property name="version" value="0.1" />
+    
+    <target name="clean">
+        <delete dir="./build/package" />
+        <delete dir="./build/export" />
+        <delete file="./Domain51_CodeGen_Decorator-${version}.tgz" />
+        
+        <mkdir dir="./build/package" />
+    </target>
+        
+    <target name="export" depends="clean">
+        <echo msg="Exporting SVN files" />
+        <exec command="svn export ./src ./build/export" />
+        <exec command="svn export ./scripts ./build/export/scripts" />
+        
+        <copy todir="./build/package">
+            <fileset dir="./build/export">
+                <include name="Domain51*/**" />
+                <include name="scripts*/**" />
+            </fileset>
+        </copy>
+    </target>
+    
+    <target name="build" depends="export">
+        <d51pearpkg2 dir="./build/package" baseinstalldir="/">
+            <name>Domain51_CodeGen_Decorator</name>
+            <summary>Provides a simple Decorator generator class and CLI script</summary>
+            <channel>pear.domain51.com</channel>
+            <description>
+                This packages provides a class capable of creating a simple Decorator for a PHP
+                object.  It has a CLI script capable of creating the Decorator from the command
+                line.
+            </description>
+            
+            <lead user="tswicegood" name="Travis Swicegood" email="developer@domain51.com" />
+            <license>LGPL</license>
+            
+            <version release="${version}" api="1.0" />
+            <stability release="alpha" api="alpha" />
+            
+            <dirroles key="scripts">script</dirroles>
+            <replacement path="scripts/php_decorator.php" type="pear-config" from="@php_bin@" to="php_bin" />
+            <release>
+                <install as="php_decorater" name="scripts/php_decorator.php" />
+            </release>
+            
+            <changelog version="0.1" date="2007-07-16">
+                This is the initial beta release of this package
+            </changelog>
+        </d51pearpkg2>
+    </target>
+    
+    <target name="make" depends="build">
+        <echo msg="Creating PEAR archive file for Domain51_CodeGen_Decorator" />
+        <mkdir dir="./build/package/Domain51_CodeGen_Decorator-${version}" />
+        <copy todir="./build/package/Domain51_CodeGen_Decorator-${version}">
+            <fileset dir="./build/package">
+                <include name="Domain51/**/**" />
+                <include name="scripts*/**" />
+            </fileset>
+        </copy>
+        <delete dir="./build/package/Domain51" />
+        <tar compression="gzip" destfile="Domain51_CodeGen_Decorator-${version}.tgz" basedir="./build/package" />
+    </target>
+    
+    <target name="docs" depends="export">
+        <echo msg="Creating documentation" />
+        <phpdoc title="Domain51_CodeGen_Decorator Docs" 
+            destdir="./apidocs"
+            sourcecode="./build"
+            output="HTML:frames:DOM/earthli"
+        >
+            <fileset dir="./build/export">
+                <include name="**" />
+            </fileset>
+        </phpdoc>
+    </target>
+</project>
