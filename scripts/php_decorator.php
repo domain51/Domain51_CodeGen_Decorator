@@ -57,6 +57,10 @@ if ($options->getValue('file')) {
     echo "The option file or class must be set.\n";
     exit(1);
 }
+
+// insure current path is in include path
+set_include_path($_ENV['PWD'] . PATH_SEPARATOR . get_include_path());
+
 require_once $file . '.php';
 
 echo "Decorating {$options->getValue('class')}...\n";
