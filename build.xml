@@ -2,7 +2,7 @@
 <project name="Domain51_CodeGen_Decorator" basedir="." default="make">
     <taskdef classname="phing.tasks.ext.d51PearPkg2Task" name="d51pearpkg2" />
     
-    <property name="version" value="0.1" />
+    <property name="version" value="0.1.1" />
     
     <target name="clean">
         <delete dir="./build/package" />
@@ -48,6 +48,17 @@
                 <install as="php_decorater" name="scripts/php_decorator.php" />
             </release>
             
+            <dependencies>
+                <package name="Console_Getargs"
+                         channel="pear.php.net"
+                         recommended_version="1.3.4" />
+            </dependencies>
+            
+            <changelog version="0.1.1" date="2007-08-09">
+                <!--        Don't exceed this width         -->
+                Add in a dependency check to insure that
+                Console_Getargs is install.
+            </changelog>
             <changelog version="0.1" date="2007-07-16">
                 This is the initial beta release of this package
             </changelog>
